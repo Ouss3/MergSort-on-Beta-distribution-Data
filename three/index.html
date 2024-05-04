@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Graph with Three.js</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+<script>
+    // Create a scene
+    var scene = new THREE.Scene();
+
+    // Create a camera
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    // Create a renderer
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Function to create a point
+    function createPoint(mean, variance, dataSize) {
+        var geometry = new THREE.SphereGeometry(0.1, 32, 32);
+        var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        var sphere = new THREE.Mesh(geometry, material);
+        sphere.position.set(mean, variance, dataSize);
+        scene.add(sphere);
+    }
+
+    // Parse the CSV file
+    Papa.parse('./results_datasize_100_mean_0.2_variance_0.1.csv', {
+        download: true,
+        complete: function(results) {
+            var data = results.data;
+            var mean = parseFloat(data[3][1]);
+            var variance = parseFloat(data[4][1]);
+            var dataSize = parseFloat(data[2][1]);
+            createPoint(mean, variance, dataSize);
+        }
+    });
+
+    // Render the scene
+    function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+    }
+    animate();
+</script>
+</body>
+</html>

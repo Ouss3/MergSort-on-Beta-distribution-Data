@@ -1,0 +1,21 @@
+{
+  "name": "three",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "canvas": "^2.11.2",
+    "csv-parser": "^3.0.0",
+    "d3": "^7.9.0",
+    "jsdom": "^24.0.0",
+    "three": "^0.164.1"
+  }
+}
