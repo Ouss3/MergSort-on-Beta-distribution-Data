@@ -136,7 +136,7 @@ public class GenerateRandom {
             }
         }
         System.out.println("Average Time per Operation: " + (avergeCount/devider)/1000000  + " ns");
-        createScatterPlot();
+
 
 
         }
@@ -146,74 +146,7 @@ public class GenerateRandom {
 
 
 
-    private static void createScatterPlot() {
-        SwingUtilities.invokeLater(() -> {
-            XYSeriesCollection dataset = new XYSeriesCollection();
 
-            // For each data size, mean, and variance
-            for (int i = 0; i < DATA_SIZES.length; i++) {
-                for (int j = 0; j < MEANS.length; j++) {
-                    for (int k = 0; k < VARIANCES.length; k++) {
-                        // Create a new series for this combination of data size, mean, and variance
-                        XYSeries series = new XYSeries("Data Size: " + DATA_SIZES[i] + ", Mean: " + MEANS[j] + ", Variance: " + VARIANCES[k]);
-
-                        // Read the execution time from the corresponding result file
-                        String fileName = "results_datasize_" + DATA_SIZES[i] + "_mean_" + MEANS[j] + "_variance_" + VARIANCES[k] + ".csv";
-                        Path filePath = Paths.get("results", fileName);
-                        try (BufferedReader reader = new BufferedReader(new FileReader(filePath.toFile()))) {
-                            // Skip the metadata lines
-                            for (int l = 0; l < 8; l++) {
-                                reader.readLine();
-                            }
-
-                            // The next line contains the average execution time
-                            String line = reader.readLine();
-                            double averageExecutionTime = Double.parseDouble(line.split(": ")[1].trim());
-
-                            // Add a point to the series
-                            series.add(DATA_SIZES[i], averageExecutionTime);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        // Add the series to the dataset
-                        dataset.addSeries(series);
-                    }
-                }
-            }
-
-            // Create the scatter plot
-            JFreeChart chart = ChartFactory.createScatterPlot(
-                    "Execution Time vs Data Size",
-                    "Data Size",
-                    "Execution Time (ns)",
-                    dataset,
-                    PlotOrientation.VERTICAL,
-                    true,
-                    true,
-                    false
-            );
-
-            // Customize the renderer
-            XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-            for (int i = 0; i < dataset.getSeriesCount(); i++) {
-                // Set the color of each series
-                renderer.setSeriesPaint(i, Color.getHSBColor((float) i / dataset.getSeriesCount(), 1, 1));
-
-                // Set the shape of each series
-                renderer.setSeriesShape(i, new Ellipse2D.Double(-3, -3, 6, 6));
-            }
-            chart.getXYPlot().setRenderer(renderer);
-
-            // Create and display the window
-            JFrame window = new JFrame();
-            window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            window.add(new ChartPanel(chart));
-            window.pack();
-            window.setLocationRelativeTo(null);
-            window.setVisible(true);
-        });
-    }
 
   // Merge sort for LinkedList
   private static LinkedList<Double> mergeSort(LinkedList<Double> list) {

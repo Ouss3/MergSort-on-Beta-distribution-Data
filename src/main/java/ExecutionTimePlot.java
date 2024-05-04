@@ -25,9 +25,10 @@ public class ExecutionTimePlot {
         File[] listOfFiles = folder.listFiles();
 
         // Create a color mapper
+        assert listOfFiles != null;
         ColorMapper colorMapper = new ColorMapper(new ColorMapRainbow(), 0, listOfFiles.length);
 
-        int fileIndex = 0;
+
         for (File file : listOfFiles) {
             if (file.isFile()) {
                 String fileName = file.getName();
@@ -39,7 +40,7 @@ public class ExecutionTimePlot {
                         }
                         // The next line contains the average execution time
                         String line = reader.readLine();
-                        int averageExecutionTime = Integer.parseInt(line.split(": ")[1].trim());
+                        double averageExecutionTime = Double.parseDouble(line.split(": ")[1].trim());
 
                         // Extract mean and variance from the file name
                         String[] parts = fileName.split("_");
@@ -65,7 +66,7 @@ public class ExecutionTimePlot {
                         e.printStackTrace();
                     }
                 }
-                fileIndex++;
+
             }
         }
 
@@ -74,9 +75,6 @@ public class ExecutionTimePlot {
         for (Point point : points) {
             chart.getScene().add(point);
         }
-        for (LineStrip bar : bars) {
-            chart.getScene().add(bar);
-        }
 
         // Add a mouse controller to enable zooming in and out
         AWTCameraMouseController mouseController = new AWTCameraMouseController(chart);
@@ -84,22 +82,17 @@ public class ExecutionTimePlot {
 
         // Display the chart
         chart.open("Execution Times", 1000, 1000);
+
     }
 
     private static Color getColor(int dataSize) {
-        switch (dataSize) {
-            case 100:
-                return Color.RED;
-            case 200:
-                return Color.BLUE;
-            case 300:
-                return Color.GREEN;
-            case 400:
-                return Color.BLACK;
-            case 1000:
-                return Color.YELLOW;
-            default:
-                return Color.GRAY; // Default color for other data sizes
-        }
+        return switch (dataSize) {
+            case 100 -> Color.RED;
+            case 200 -> Color.BLUE;
+            case 300 -> Color.GREEN;
+            case 400 -> Color.BLACK;
+            case 1000 -> Color.YELLOW;
+            default -> Color.GRAY; // Default color for other data sizes
+        };
     }
 }
